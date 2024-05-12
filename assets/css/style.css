@@ -14,3 +14,12 @@ body {
 .task-card:hover {
   cursor: grab;
 }
+
+.floatDiv{
+  display:none;
+  line-height: 30px;
+  position: absolute;
+  left: 35%;
+  top:5%;
+}
+
