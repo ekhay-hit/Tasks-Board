@@ -1,17 +1,18 @@
 const float = $(".floatDiv");
 const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
+const btnCloseTask =$(".btn-close")
 
 // input selector
-let toDo;
+let toDo=[];
 let myTask = JSON.parse(localStorage.getItem("toDo"));
 // console.log(` this is my array now ${JSON.stringify(myTask)}`);
 
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
-$(function () {
-  $("#date").datepicker();
-});
+// $(function () {
+//   $("#date").datepicker();
+// });
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {}
@@ -30,7 +31,7 @@ function createTaskCard(task) {
   for (let i = 0; i < myTask.length; i++) {
     const divE1 = $("<div>");
     $(divE1).attr("id", `task-${i}`);
-    $(divE1).addClass("task-style")
+    $(divE1).addClass("task-card")
 
     $("#todo-cards").append(divE1);
 
@@ -72,6 +73,9 @@ function handleAddTask(event) {
   renderTaskList();
 }
 
+function closeWindow(){
+  $(".floatDiv").toggle();
+}
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event) {}
 
@@ -80,34 +84,27 @@ function handleDrop(event, ui) {}
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
-  //   if (localStorage.getItem(toDo) === null) {
-  //     toDo = [];
-  //   } else {
-  //     toDo = JSON.parse(localStorage.getItem("toDo"));
-  //   }
 
+  renderTaskList();
   addTaskBtn.click(function () {
     $(".floatDiv").toggle();
   });
-  storeTaskBtn.click(handleAddTask);
-  $( function() {
-    $(".task-style").draggable();
-  } );
-  renderTaskList();
 
-  //   const divE1 = $("<div>");
-  //   divE1.addClass("task-style");
-  //   $("#todo-cards").append(divE1);
-  //   const title = $("<h6>");
-  //   title.text(myTask[0].title);
-  //   divE1.append(title);
-  //   const dateHolder = $("<p>");
-  //   dateHolder.text(myTask[0].date);
-  //   divE1.append(dateHolder);
-  //   const status = $("<p>");
-  //   status.text(myTask[0].task);
-  //   divE1.append(status);
-  //   const btn = $("<button>");
-  //   btn.text("Delete");
-  //   divE1.append(btn);
+  storeTaskBtn.click(handleAddTask);
+  btnCloseTask.click(closeWindow);
+
+  $( function() {
+    $("#date").datepicker();
+    $(".task-card").draggable();
+    $( ".card-body" ).droppable({
+      drop: function( event, ui ) {
+        $( this )
+          .addClass( "ui-state-highlight" )
+          .find( "#in-progress-cards" )
+      }
+    });
+  });
+  
+ 
+
 });
