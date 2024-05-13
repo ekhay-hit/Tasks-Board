@@ -12,6 +12,7 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 $(function () {
   $("#date").datepicker();
 });
+
 // Todo: create a function to generate a unique task id
 function generateTaskId() {}
 
@@ -89,6 +90,9 @@ $(document).ready(function () {
     $(".floatDiv").toggle();
   });
   storeTaskBtn.click(handleAddTask);
+  $( function() {
+    $(".task-style").draggable();
+  } );
   renderTaskList();
 
   //   const divE1 = $("<div>");
