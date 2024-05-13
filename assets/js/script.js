@@ -28,7 +28,7 @@ function createTaskCard(task) {
   // task.preventDefault();
   for (let i = 0; i < myTask.length; i++) {
     const divE1 = $("<div>");
-    // $(divE1).attr("id", "task-style");
+    $(divE1).attr("id", `task-${i}`);
     $(divE1).addClass("task-style")
 
     $("#todo-cards").append(divE1);
