@@ -1,9 +1,10 @@
-
 const float = $(".floatDiv");
 const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
 const btnCloseTask =$(".btn-close")
-
+const parent =$(".card-body");
+// const deleteTask = getElementById("todo-cards").querySelectorAll(".btnTask");
+const deleteTask = document.querySelectorAll(".btnTask");
 // input selector
 let toDo=[];
 let myTask = JSON.parse(localStorage.getItem("toDo"));
@@ -11,9 +12,7 @@ let myTask = JSON.parse(localStorage.getItem("toDo"));
 
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
-// $(function () {
-//   $("#date").datepicker();
-// });
+
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {};
@@ -58,6 +57,7 @@ function createTaskCard(task) {
     status.text(myTask[i].task);
     divE1.append(status);
     const btn = $("<button>");
+    btn.addClass("btnTask")
     btn.text("Delete");
     divE1.append(btn);
     
@@ -100,6 +100,16 @@ function handleAddTask(event) {
 function closeWindow(){
   $(".floatDiv").toggle();
 }
+// delete a task 
+
+function dltTask(e){
+  console.log('I am here at delete');
+  e.currentTarget.remove();
+}
+
+
+
+
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event) {}
 
@@ -116,21 +126,55 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
-
+  // deleteTask.click(dltTask);
+//https://stackoverflow.com/questions/64023462/how-can-i-create-a-click-event-where-i-have-several-divs-and-each-having-a-butt
+document.querySelector('.card-body').addEventListener('click', (e) => {
+  //  console.log(e.target)
+  e.currentTarget.remove();
+  
+ })
 
   
   $( function() {
     $("#date").datepicker();
+
     $(".task-card").draggable();
-    $( ".card-body" ).droppable({
+
+    $( ".card-body" ).droppable({  
       drop: function( event, ui ) {
         $( this )
           .addClass( "ui-state-highlight" )
           .find( "#in-progress-cards" )
+         console.log( ui.draggable.prop('id'))
       }
     });
-  });
-  
- 
 
+  });
+
+
+    let dragged = null;
+
+         const source = document.getElementById("todo-cards");
+       
+         source.addEventListener("dragstart", (event) => {
+           // store a ref. on the dragged elem
+           dragged = event.target;
+           console.log(`draged ${dragged}`);
+         });
+         
+         const target = document.querySelector(".card-body");
+         target.addEventListener("dragover", (event) => {
+           // prevent default to allow drop
+           event.preventDefault();
+         });
+         
+         target.addEventListener("drop", (event) => {
+           // prevent default action (open as a link for some elements)
+           event.preventDefault();
+           // move dragged element to the selected drop target
+           if (event.target.className === "in-progress-card") {
+             dragged.parentNode.removeChild(dragged);
+             event.target.appendChild(dragged);
+           }
+         });
 });
