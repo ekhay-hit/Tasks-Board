@@ -1,3 +1,4 @@
+
 const float = $(".floatDiv");
 const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
@@ -15,9 +16,21 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 // });
 
 // Todo: create a function to generate a unique task id
-function generateTaskId() {}
+function generateTaskId() {};
+
+function calculateTaskDate(taskDate){
+  let today =dayjs();
+  console.log(`today is ${today}`);
+  const targetDay = dayjs(taskDate);
+  let days = targetDay.diff(today, 'days');
+  console.log(`the number of days are ${days}`);
+  return days;
+}
 
 // Todo: create a function to create a task card
+
+
+
 function createTaskCard(task) {
   if (localStorage.getItem("toDo") === null) {
     return;
@@ -29,10 +42,10 @@ function createTaskCard(task) {
   $("#todo-cards").empty();
   // task.preventDefault();
   for (let i = 0; i < myTask.length; i++) {
+    let dueDate =calculateTaskDate(myTask[i].date);
     const divE1 = $("<div>");
     $(divE1).attr("id", `task-${i}`);
     $(divE1).addClass("task-card")
-
     $("#todo-cards").append(divE1);
 
     const title = $("<h6>");
@@ -47,8 +60,19 @@ function createTaskCard(task) {
     const btn = $("<button>");
     btn.text("Delete");
     divE1.append(btn);
+    
+    if(dueDate >= 1){
+      title.css("background-color", "#EFEFE7");  // gray
+      // divE1.attr("style", "background-color:green");
+    }else if(dueDate < 0){
+      // divE1.attr("style", "background-color:red");
+      divE1.css("background-color", "#FF3333");  // red
+    }else {
+      divE1.css("background-color", "#FFF633"); // yellow
+    }
   }
 }
+
 
 // Todo: create a function to render the task list and make cards draggable
 function renderTaskList() {
@@ -93,6 +117,8 @@ $(document).ready(function () {
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
 
+
+  
   $( function() {
     $("#date").datepicker();
     $(".task-card").draggable();
