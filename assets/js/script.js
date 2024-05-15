@@ -15,10 +15,13 @@ let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
-function generateTaskId() {}
+function generateTaskId() {
+  const id =Math.floor(Math.random() * 40);
+  return `task-${id}`;
+}
 
 function calculateTaskDate(taskDate) {
-  let today = dayjs.utc();
+  let today = dayjs();
   console.log(`today is ${today}`);
   const targetDay = dayjs(taskDate);
   let days = targetDay.diff(today, "days");
@@ -41,7 +44,7 @@ function createTaskCard(task) {
   for (let i = 0; i < myTask.length; i++) {
     let dueDate = calculateTaskDate(myTask[i].date);
     const divE1 = $("<div>");
-    $(divE1).attr("id", `task-${i}`);
+    $(divE1).attr("id", myTask[i].id);
     $(divE1).addClass("task-card");
     $("#todo-cards").append(divE1);
 
@@ -88,6 +91,7 @@ function handleAddTask(event) {
     title: $("#title").val(),
     date: dayjs(date).format("MM/DD/YYYY"),
     task: $("#task").val().trim(),
+    id: generateTaskId() ,
   };
   toDo.push(task);
   localStorage.setItem("toDo", JSON.stringify(toDo));
@@ -132,34 +136,35 @@ $(document).ready(function () {
     $(".card-body").droppable({
       drop: function (event, ui) {
         $(this).addClass("ui-state-highlight").find("#in-progress-cards");
+        console.log(toDo);
         console.log(ui.draggable.prop("id"));
       },
     });
   });
 
-  let dragged = null;
+  // let dragged = null;
 
-  const source = document.getElementById("todo-cards");
+  // const source = document.getElementById("todo-cards");
 
-  source.addEventListener("dragstart", (event) => {
-    // store a ref. on the dragged elem
-    dragged = event.target;
-    console.log(`draged ${dragged}`);
-  });
+  // source.addEventListener("dragstart", (event) => {
+  //   // store a ref. on the dragged elem
+  //   dragged = event.target;
+  //   console.log(`draged ${dragged}`);
+  // });
 
-  const target = document.querySelector(".card-body");
-  target.addEventListener("dragover", (event) => {
-    // prevent default to allow drop
-    event.preventDefault();
-  });
+  // const target = document.querySelector(".card-body");
+  // target.addEventListener("dragover", (event) => {
+  //   // prevent default to allow drop
+  //   event.preventDefault();
+  // });
 
-  target.addEventListener("drop", (event) => {
-    // prevent default action (open as a link for some elements)
-    event.preventDefault();
-    // move dragged element to the selected drop target
-    if (event.target.className === "in-progress-card") {
-      dragged.parentNode.removeChild(dragged);
-      event.target.appendChild(dragged);
-    }
-  });
+  // target.addEventListener("drop", (event) => {
+  //   // prevent default action (open as a link for some elements)
+  //   event.preventDefault();
+  //   // move dragged element to the selected drop target
+  //   if (event.target.className === "in-progress-card") {
+  //     dragged.parentNode.removeChild(dragged);
+  //     event.target.appendChild(dragged);
+  //   }
+  // });
 });
