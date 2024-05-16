@@ -1,4 +1,3 @@
-
 const float = $(".floatDiv");
 const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
@@ -16,22 +15,21 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
-  let condition=true;
+  let condition = true;
   let randomId;
-  while(condition){
-    let id =Math.floor(Math.random() * 40);
-      randomId = `task-${id}`;
-  for(let i=0; i<toDo.length; i++){
-    if (randomId.includes(toDo[i].id)){
-       id =Math.floor(Math.random() * 40);
+  while (condition) {
+    let id = Math.floor(Math.random() * 40);
+    randomId = `task-${id}`;
+    for (let i = 0; i < toDo.length; i++) {
+      if (randomId.includes(toDo[i].id)) {
+        id = Math.floor(Math.random() * 40);
         randomId = `task-${id}`;
-    }else{
-      condition = false;
+      } else {
+        condition = false;
+      }
     }
+    return randomId;
   }
-  return randomId;
-}
-  
 }
 
 function calculateTaskDate(taskDate) {
@@ -60,7 +58,7 @@ function createTaskCard(task) {
     const divE1 = $("<div>");
     $(divE1).attr("id", myTask[i].id);
     $(divE1).addClass("task-card");
-   
+
     const title = $("<h6>");
     title.text(myTask[i].title);
     divE1.append(title);
@@ -74,15 +72,7 @@ function createTaskCard(task) {
     btn.addClass("btnTask");
     btn.text("Delete");
     divE1.append(btn);
-    if(toDo[i].status === "to-do"){
-      $("#todo-cards").append(divE1);
-    }else if(toDo[i].status === "in-progress"){
-      $("#in-progress-card").append(divE1);
-    }else if(toDo[i].status === "done"){
-      $("#done-cards").append(divE1);
-      
-    }
-    
+
     if (dueDate >= 1) {
       title.css("background-color", "#EFEFE7"); // gray
       // divE1.attr("style", "background-color:green");
@@ -91,6 +81,15 @@ function createTaskCard(task) {
       divE1.css("background-color", "#FF3333"); // red
     } else {
       divE1.css("background-color", "#FFF633"); // yellow
+    }
+
+    if (toDo[i].status === "to-do") {
+      $("#todo-cards").append(divE1);
+    } else if (toDo[i].status === "in-progress") {
+      $("#in-progress-card").append(divE1);
+    } else if (toDo[i].status === "done") {
+      $("#done-cards").append(divE1);
+      divE1.css("background-color", "#EFEFE7");
     }
   }
 }
@@ -113,7 +112,7 @@ function handleAddTask(event) {
     date: dayjs(date).format("MM/DD/YYYY"),
     task: $("#task").val().trim(),
     id: generateTaskId(),
-    status: "to-do"
+    status: "to-do",
   };
   toDo.push(task);
   localStorage.setItem("toDo", JSON.stringify(toDo));
@@ -123,8 +122,6 @@ function handleAddTask(event) {
 function closeWindow() {
   $(".floatDiv").toggle();
 }
-
-
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event) {}
@@ -141,12 +138,12 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
-  
+
   //https://stackoverflow.com/questions/64023462/how-can-i-create-a-click-event-where-i-have-several-divs-and-each-having-a-butt
   document.querySelector("#todo-cards").addEventListener("click", (e) => {
-     console.log(e.target)
+    console.log(e.target);
     console.log("I am here at delete");
-    $(e.target).parents('.task-card').remove();
+    $(e.target).parents(".task-card").remove();
     // e.currentTarget.removeChild("<div>");
   });
 
@@ -158,28 +155,29 @@ $(document).ready(function () {
     $(".card-body").droppable({
       drop: function (event, ui) {
         $(this).addClass("ui-state-highlight").find("#in-progress-cards");
-       const dragedEl = ui.draggable.prop("id");
-       console.log(`this the elm dragged ${dragedEl}`);
-      
-      const target= document.getElementById(event.target.id).parentNode.id;
-          console.log(`This the target drop ${target}`);
-          console.log(typeof(target));
-     
-    
+        const dragedEl = ui.draggable.prop("id");
+        console.log(`this the elm dragged ${dragedEl}`);
 
-      let index =toDo.map(function(x){return x.id;}).indexOf(dragedEl);
-      console.log(`This is the index of draged element in the array ${index}`);
-    
-        if(target === "in-progress"){
-          toDo[index].status ="in-progress"
-         
+        const target = document.getElementById(event.target.id).parentNode.id;
+        console.log(`This the target drop ${target}`);
+        console.log(typeof target);
 
+        let index = toDo
+          .map(function (x) {
+            return x.id;
+          })
+          .indexOf(dragedEl);
+        console.log(
+          `This is the index of draged element in the array ${index}`
+        );
 
-        }else if (target === "done"){
-          toDo[index].status ="done";
+        if (target === "in-progress") {
+          toDo[index].status = "in-progress";
+        } else if (target === "done") {
+          toDo[index].status = "done";
         }
 
-        localStorage.setItem('toDo', JSON.stringify(toDo))
+        localStorage.setItem("toDo", JSON.stringify(toDo));
       },
     });
   });
