@@ -106,7 +106,13 @@ function handleAddTask(event) {
   event.preventDefault();
   $(".floatDiv").toggle();
   console.log("You have click the button in floating Div");
-
+  if (
+    $("#title").val() === "" ||
+    $("#date").val()=== "" ||
+    $("#task").val() === ""
+  ) {
+    alert("Please complete the form");
+  } else {
   const date = $("#date").val();
 
   const task = {
@@ -119,6 +125,7 @@ function handleAddTask(event) {
   toDo.push(task);
   localStorage.setItem("toDo", JSON.stringify(toDo));
   renderTaskList();
+}
 }
 
 function closeWindow() {
