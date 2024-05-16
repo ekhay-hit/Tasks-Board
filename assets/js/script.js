@@ -4,7 +4,7 @@ const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
 const btnCloseTask = $(".btn-close");
 const parent = $(".card-body");
-const deleteTask = document.querySelectorAll(".btnTask");
+
 // array initial
 let toDo = [];
 // Pulling the JSON and parsing it, assigned to an array
@@ -167,24 +167,31 @@ function closeWindow() {
 function handleDeleteTask(event) {
  
 }
+// function to find the index of a given property 
+function  getIndexOfId(myid){
+  let index = toDo
+     .map(function (x) {
+       return x.id;
+     })
+     .indexOf(myid);
+   
+  return index;
+}
 
 // Todo: create a function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
    // get the id of draggable element
-   const dragedEl = ui.draggable.prop("id");
-   console.log(`this the elm dragged ${dragedEl}`);
+   const dragedElId = ui.draggable.prop("id");
+   console.log(`this the elm dragged ${dragedElId}`);
 // get the id of the droppable parent element
 const target = document.getElementById(event.target.id).parentNode.id;
 console.log(`This the target drop ${target}`);
 // look through the array and return the index of the id property that was given
-let index = toDo
-     .map(function (x) {
-       return x.id;
-     })
-     .indexOf(dragedEl);
-   console.log(
-     `This is the index of draged element in the array ${index}`
-   );
+event.preventDefault();
+let index = getIndexOfId(dragedElId);
+console.log(
+  `This is the index of draged element in the array ${index}`
+);
      // update the status of where the object is dropped
    if (target === "in-progress") {
      toDo[index].status = "in-progress";
@@ -210,11 +217,28 @@ $(document).ready(function () {
   btnCloseTask.click(closeWindow);
 
   // delete function
-  
-  // document.querySelector("#todo-cards").addEventListener("click", (e) => {
+  const deleteTask = document.querySelectorAll(".btnTask");
+  // console.log(deleteTask);
+
+  for(let i=0; i< deleteTask.length; i++){
+    
+    deleteTask[i].addEventListener('click',function(e){
+      e.preventDefault();
+      let id = e.target.parentNode.id;
+      console.log(toDo);
+      let index =getIndexOfId(id);
+      const discardArry = toDo.splice(index, 1);
+      console.log("I am here at delete");
+      console.log(toDo);
+      localStorage.setItem("toDo", JSON.stringify(toDo));
+   // re-load the page 
+       history.go(0)
+    });
+  }
+  // deleteTask.addEventListener("click", (e) => {
   //   console.log(e.target);
   //   console.log("I am here at delete");
-  //   $(e.target).parents(".task-card").remove();
+  //   // $(e.target).parents(".task-card").remove();
   //   // e.currentTarget.removeChild("<div>");
   // });
 // Jquery function 
