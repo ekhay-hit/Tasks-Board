@@ -16,16 +16,30 @@ let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
-  const id =Math.floor(Math.random() * 40);
-  return `task-${id}`;
+  let condition=true;
+  let randomId;
+  while(condition){
+    let id =Math.floor(Math.random() * 40);
+      randomId = `task-${id}`;
+  for(let i=0; i<toDo.length; i++){
+    if (randomId.includes(toDo[i].id)){
+       id =Math.floor(Math.random() * 40);
+        randomId = `task-${id}`;
+    }else{
+      condition = false;
+    }
+  }
+  return randomId;
+}
+  
 }
 
 function calculateTaskDate(taskDate) {
   let today = dayjs();
-  console.log(`today is ${today}`);
+  // console.log(`today is ${today}`);
   const targetDay = dayjs(taskDate);
   let days = targetDay.diff(today, "days");
-  console.log(`the number of days are ${days}`);
+  // console.log(`the number of days are ${days}`);
   return days;
 }
 
@@ -46,8 +60,7 @@ function createTaskCard(task) {
     const divE1 = $("<div>");
     $(divE1).attr("id", myTask[i].id);
     $(divE1).addClass("task-card");
-    $("#todo-cards").append(divE1);
-
+   
     const title = $("<h6>");
     title.text(myTask[i].title);
     divE1.append(title);
@@ -61,7 +74,15 @@ function createTaskCard(task) {
     btn.addClass("btnTask");
     btn.text("Delete");
     divE1.append(btn);
-
+    if(toDo[i].status === "to-do"){
+      $("#todo-cards").append(divE1);
+    }else if(toDo[i].status === "in-progress"){
+      $("#in-progress-card").append(divE1);
+    }else if(toDo[i].status === "done"){
+      $("#done-cards").append(divE1);
+      
+    }
+    
     if (dueDate >= 1) {
       title.css("background-color", "#EFEFE7"); // gray
       // divE1.attr("style", "background-color:green");
@@ -91,7 +112,8 @@ function handleAddTask(event) {
     title: $("#title").val(),
     date: dayjs(date).format("MM/DD/YYYY"),
     task: $("#task").val().trim(),
-    id: generateTaskId() ,
+    id: generateTaskId(),
+    status: "to-do"
   };
   toDo.push(task);
   localStorage.setItem("toDo", JSON.stringify(toDo));
@@ -136,8 +158,28 @@ $(document).ready(function () {
     $(".card-body").droppable({
       drop: function (event, ui) {
         $(this).addClass("ui-state-highlight").find("#in-progress-cards");
-        console.log(toDo);
-        console.log(ui.draggable.prop("id"));
+       const dragedEl = ui.draggable.prop("id");
+       console.log(`this the elm dragged ${dragedEl}`);
+      
+      const target= document.getElementById(event.target.id).parentNode.id;
+          console.log(`This the target drop ${target}`);
+          console.log(typeof(target));
+     
+    
+
+      let index =toDo.map(function(x){return x.id;}).indexOf(dragedEl);
+      console.log(`This is the index of draged element in the array ${index}`);
+    
+        if(target === "in-progress"){
+          toDo[index].status ="in-progress"
+         
+
+
+        }else if (target === "done"){
+          toDo[index].status ="done";
+        }
+
+        localStorage.setItem('toDo', JSON.stringify(toDo))
       },
     });
   });
