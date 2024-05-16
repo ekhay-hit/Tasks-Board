@@ -47,3 +47,11 @@ body {
   }
 }
 
+#closebtn{
+  float:right;
+  cursor: pointer;
+  color: #333;
+  font-size: 2rem;
+  border: none;
+  background: none;
+}

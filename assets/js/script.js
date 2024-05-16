@@ -4,6 +4,7 @@ const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
 const btnCloseTask = $(".btn-close");
 const parent = $(".card-body");
+const closebtn =$("#closebtn")
 
 // array initial
 let toDo = [];
@@ -43,10 +44,10 @@ function generateTaskId() {
 function calculateTaskDate(taskDate) {
   // todays date 
   let today = dayjs();
-  // console.log(`today is ${today}`);
+  console.log(`today is ${today}`);
   const targetDay = dayjs(taskDate);
-  let days = targetDay.diff(today, "days");
-  // console.log(`the number of days are ${days}`);
+  let days = targetDay.diff(today, "day");
+  console.log(`the number of days are ${days}`);
   return days;
 }
 
@@ -103,7 +104,7 @@ function createTaskCard(task) {
     // append the button to div
     divE1.append(btn);
       // give a style to div base on the date 
-    if (dueDate >= 1) {
+    if (dueDate > 0) {
       title.css("background-color", "#EFEFE7"); // gray
     } else if (dueDate < 0) {
       divE1.css("background-color", "#FF3333"); // red
@@ -154,6 +155,11 @@ function handleAddTask(event) {
   toDo.push(task);
   // store the array in local storage
   localStorage.setItem("toDo", JSON.stringify(toDo));
+    // empty the input value t
+    $("#title").val("");
+    $("#date").val("");
+    $("#task").val("");
+ 
   // render the task
   renderTaskList();
 }
@@ -215,6 +221,9 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
+  closebtn.addEventListener("click", function(){
+    float.hide();
+  })
 
   // delete function
   const deleteTask = document.querySelectorAll(".btnTask");
