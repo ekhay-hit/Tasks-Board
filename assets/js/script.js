@@ -221,9 +221,6 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
-  closebtn.addEventListener("click", function(){
-    float.hide();
-  })
 
   // delete function
   const deleteTask = document.querySelectorAll(".btnTask");
