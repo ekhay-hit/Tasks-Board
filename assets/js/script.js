@@ -1,25 +1,32 @@
+// selectors for elements 
 const float = $(".floatDiv");
 const addTaskBtn = $("#btn1");
 const storeTaskBtn = $("#btn2");
 const btnCloseTask = $(".btn-close");
 const parent = $(".card-body");
-// const deleteTask = getElementById("todo-cards").querySelectorAll(".btnTask");
 const deleteTask = document.querySelectorAll(".btnTask");
-// input selector
+// array initial
 let toDo = [];
+// Pulling the JSON and parsing it, assigned to an array
 let myTask = JSON.parse(localStorage.getItem("toDo"));
 // console.log(` this is my array now ${JSON.stringify(myTask)}`);
 
-let taskList = JSON.parse(localStorage.getItem("tasks"));
-let nextId = JSON.parse(localStorage.getItem("nextId"));
+// let taskList = JSON.parse(localStorage.getItem("tasks"));
+// let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
+  // set a condition for the loop
   let condition = true;
+  // varaible to store the id
   let randomId;
+  //loop through the array and look if the id exist, if does then generate an other random id
   while (condition) {
+    // assinging random function to id
     let id = Math.floor(Math.random() * 40);
+    // create an id using template and the id from random
     randomId = `task-${id}`;
+    //loop and check if the randomId exist in the array if does call ranodm again if not return the id
     for (let i = 0; i < toDo.length; i++) {
       if (randomId.includes(toDo[i].id)) {
         id = Math.floor(Math.random() * 40);
@@ -32,7 +39,9 @@ function generateTaskId() {
   }
 }
 
+// *********************************************Function to return days left for the task to become due or past due using dayjs()*********************
 function calculateTaskDate(taskDate) {
+  // todays date 
   let today = dayjs();
   // console.log(`today is ${today}`);
   const targetDay = dayjs(taskDate);
@@ -41,9 +50,10 @@ function calculateTaskDate(taskDate) {
   return days;
 }
 
-// Todo: create a function to create a task card
+// ************Todo: create a function to create a task card
 
 function createTaskCard(task) {
+  // check if the array of object is null or has object if does initials the array with the object 
   if (localStorage.getItem("toDo") === null) {
     return;
   } else {
@@ -51,40 +61,56 @@ function createTaskCard(task) {
     myTask = JSON.parse(localStorage.getItem("toDo"));
   }
   
+  // empty the tasks container to avoid displaying same task multiple times
   $("#todo-cards").empty();
   $("#in-progress-card").empty();
   $("#done-cards").empty();
   // task.preventDefault();
+  // loop through the array of object and create html dynamically and assign it the values in each object property
   for (let i = 0; i < myTask.length; i++) {
+    // calculate the object days left or passed for due date 
     let dueDate = calculateTaskDate(myTask[i].date);
+    // create a div
     const divE1 = $("<div>");
+    // add and a random id to div
     $(divE1).attr("id", myTask[i].id);
+    //add a class to syle the div
     $(divE1).addClass("task-card");
-
+    // create and heading6 
     const title = $("<h6>");
+    // added title to heading
     title.text(myTask[i].title);
+    // appened title to dive
     divE1.append(title);
+    // create a p element
     const dateHolder = $("<p>");
+    // add date of the object to the element 
     dateHolder.text(myTask[i].date);
+    //append date to div
     divE1.append(dateHolder);
-    const status = $("<p>");
-    status.text(myTask[i].task);
-    divE1.append(status);
+    // create a p element 
+    const discription = $("<p>");
+    //add description to the element 
+    discription.text(myTask[i].task);
+    // append p to div
+    divE1.append(discription);
+    // create a button element
     const btn = $("<button>");
+    // add a style to the button
     btn.addClass("btnTask");
+    // add a text to the button
     btn.text("Delete");
+    // append the button to div
     divE1.append(btn);
-
+      // give a style to div base on the date 
     if (dueDate >= 1) {
       title.css("background-color", "#EFEFE7"); // gray
-      // divE1.attr("style", "background-color:green");
     } else if (dueDate < 0) {
-      // divE1.attr("style", "background-color:red");
       divE1.css("background-color", "#FF3333"); // red
     } else {
       divE1.css("background-color", "#FFF633"); // yellow
     }
-
+    // append the div task to the page pased on its status and changed the style
     if (toDo[i].status === "to-do") {
       $("#todo-cards").append(divE1);
     } else if (toDo[i].status === "in-progress") {
@@ -104,17 +130,19 @@ function renderTaskList() {
 // Todo: create a function to handle adding a new task
 function handleAddTask(event) {
   event.preventDefault();
+  // open the windows when click add task
   $(".floatDiv").toggle();
   console.log("You have click the button in floating Div");
+  // logic for preventing the submission of an commplet task input
   if (
     $("#title").val() === "" ||
     $("#date").val()=== "" ||
     $("#task").val() === ""
   ) {
-    alert("Please complete the form");
+    alert("Please complete all task inputs");
   } else {
+    // assgning the input to object 
   const date = $("#date").val();
-
   const task = {
     title: $("#title").val(),
     date: dayjs(date).format("MM/DD/YYYY"),
@@ -122,8 +150,11 @@ function handleAddTask(event) {
     id: generateTaskId(),
     status: "to-do",
   };
+  // push the object to the array
   toDo.push(task);
+  // store the array in local storage
   localStorage.setItem("toDo", JSON.stringify(toDo));
+  // render the task
   renderTaskList();
 }
 }
@@ -133,10 +164,40 @@ function closeWindow() {
 }
 
 // Todo: create a function to handle deleting a task
-function handleDeleteTask(event) {}
+function handleDeleteTask(event) {
+ 
+}
 
 // Todo: create a function to handle dropping a task into a new status lane
-function handleDrop(event, ui) {}
+function handleDrop(event, ui) {
+   // get the id of draggable element
+   const dragedEl = ui.draggable.prop("id");
+   console.log(`this the elm dragged ${dragedEl}`);
+// get the id of the droppable parent element
+const target = document.getElementById(event.target.id).parentNode.id;
+console.log(`This the target drop ${target}`);
+// look through the array and return the index of the id property that was given
+let index = toDo
+     .map(function (x) {
+       return x.id;
+     })
+     .indexOf(dragedEl);
+   console.log(
+     `This is the index of draged element in the array ${index}`
+   );
+     // update the status of where the object is dropped
+   if (target === "in-progress") {
+     toDo[index].status = "in-progress";
+   } else if (target === "done") {
+     toDo[index].status = "done";
+   }else if(target === "to-do"){
+     toDo[index].status = "to-do";
+   }
+   // update the array object in the local storage
+   localStorage.setItem("toDo", JSON.stringify(toDo));
+   // re-load the page 
+   history.go(0)
+}
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
@@ -156,7 +217,7 @@ $(document).ready(function () {
   //   $(e.target).parents(".task-card").remove();
   //   // e.currentTarget.removeChild("<div>");
   // });
-
+// Jquery function 
   $(function () {
     $("#date").datepicker();
 
@@ -164,34 +225,8 @@ $(document).ready(function () {
 
     $(".card-body").droppable({
       drop: function (event, ui) {
-        $(this).addClass("ui-state-highlight").find("#in-progress-cards");
-        const dragedEl = ui.draggable.prop("id");
-        console.log(`this the elm dragged ${dragedEl}`);
-
-        const target = document.getElementById(event.target.id).parentNode.id;
-        console.log(`This the target drop ${target}`);
-        console.log(typeof target);
-
-        let index = toDo
-          .map(function (x) {
-            return x.id;
-          })
-          .indexOf(dragedEl);
-        console.log(
-          `This is the index of draged element in the array ${index}`
-        );
-          // update the status of where the object is dropped
-        if (target === "in-progress") {
-          toDo[index].status = "in-progress";
-        } else if (target === "done") {
-          toDo[index].status = "done";
-        }else if(target === "to-do"){
-          toDo[index].status = "to-do";
-        }
-        // update the array object in the local storage
-        localStorage.setItem("toDo", JSON.stringify(toDo));
-        // re-load the page 
-        history.go(0)
+        $(this).addClass("ui-state-highlight");
+        handleDrop(event, ui);
       },
      
     });
