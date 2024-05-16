@@ -173,7 +173,7 @@ $(document).ready(function () {
         console.log(
           `This is the index of draged element in the array ${index}`
         );
-
+          // update the status of where the object is dropped
         if (target === "in-progress") {
           toDo[index].status = "in-progress";
         } else if (target === "done") {
@@ -181,36 +181,14 @@ $(document).ready(function () {
         }else if(target === "to-do"){
           toDo[index].status = "to-do";
         }
-
+        // update the array object in the local storage
         localStorage.setItem("toDo", JSON.stringify(toDo));
-        // createTaskCard();
+        // re-load the page 
+        history.go(0)
       },
+     
     });
+
   });
 
-  // let dragged = null;
-
-  // const source = document.getElementById("todo-cards");
-
-  // source.addEventListener("dragstart", (event) => {
-  //   // store a ref. on the dragged elem
-  //   dragged = event.target;
-  //   console.log(`draged ${dragged}`);
-  // });
-
-  // const target = document.querySelector(".card-body");
-  // target.addEventListener("dragover", (event) => {
-  //   // prevent default to allow drop
-  //   event.preventDefault();
-  // });
-
-  // target.addEventListener("drop", (event) => {
-  //   // prevent default action (open as a link for some elements)
-  //   event.preventDefault();
-  //   // move dragged element to the selected drop target
-  //   if (event.target.className === "in-progress-card") {
-  //     dragged.parentNode.removeChild(dragged);
-  //     event.target.appendChild(dragged);
-  //   }
-  // });
 });
