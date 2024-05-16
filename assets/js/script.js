@@ -50,8 +50,10 @@ function createTaskCard(task) {
     toDo = JSON.parse(localStorage.getItem("toDo"));
     myTask = JSON.parse(localStorage.getItem("toDo"));
   }
-
+  
   $("#todo-cards").empty();
+  $("#in-progress-card").empty();
+  $("#done-cards").empty();
   // task.preventDefault();
   for (let i = 0; i < myTask.length; i++) {
     let dueDate = calculateTaskDate(myTask[i].date);
@@ -139,13 +141,14 @@ $(document).ready(function () {
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
 
-  //https://stackoverflow.com/questions/64023462/how-can-i-create-a-click-event-where-i-have-several-divs-and-each-having-a-butt
-  document.querySelector("#todo-cards").addEventListener("click", (e) => {
-    console.log(e.target);
-    console.log("I am here at delete");
-    $(e.target).parents(".task-card").remove();
-    // e.currentTarget.removeChild("<div>");
-  });
+  // delete function
+  
+  // document.querySelector("#todo-cards").addEventListener("click", (e) => {
+  //   console.log(e.target);
+  //   console.log("I am here at delete");
+  //   $(e.target).parents(".task-card").remove();
+  //   // e.currentTarget.removeChild("<div>");
+  // });
 
   $(function () {
     $("#date").datepicker();
@@ -175,9 +178,12 @@ $(document).ready(function () {
           toDo[index].status = "in-progress";
         } else if (target === "done") {
           toDo[index].status = "done";
+        }else if(target === "to-do"){
+          toDo[index].status = "to-do";
         }
 
         localStorage.setItem("toDo", JSON.stringify(toDo));
+        // createTaskCard();
       },
     });
   });
