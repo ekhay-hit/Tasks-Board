@@ -5,7 +5,7 @@ const storeTaskBtn = $("#btn2");
 const btnCloseTask = $(".btn-close");
 const parent = $(".card-body");
 const closebtn =$("#closebtn")
-const deleteTask = document.querySelectorAll(".btnTask");
+
 
 // array initial
 let toDo = [];
@@ -158,8 +158,17 @@ function closeWindow() {
 }
 
 // Todo: create a function to handle deleting a task
-function handleDeleteTask(event) {
- 
+function handleDeleteTask(e){
+  e.preventDefault();
+  let id = e.target.parentNode.id;
+  console.log(toDo);
+  let index =getIndexOfId(id);
+  const discardArry = toDo.splice(index, 1);
+  console.log("I am here at delete");
+  console.log(toDo);
+  localStorage.setItem("toDo", JSON.stringify(toDo));
+// re-load the page 
+   history.go(0)
 }
 // function to find the index of a given property 
 function  getIndexOfId(myid){
@@ -209,34 +218,26 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
-<<<<<<< HEAD
  
-=======
-
->>>>>>> f9d0b9a1d7b22e9417003c2e5401bc282667cb7c
-  // delete function
- 
+  // delete function  handleDeleteTask
+  const deleteTask = document.querySelectorAll(".btnTask");
   for(let i=0; i< deleteTask.length; i++){
     
-    deleteTask[i].addEventListener('click',function(e){
-      e.preventDefault();
-      let id = e.target.parentNode.id;
-      console.log(toDo);
-      let index =getIndexOfId(id);
-      const discardArry = toDo.splice(index, 1);
-      console.log("I am here at delete");
-      console.log(toDo);
-      localStorage.setItem("toDo", JSON.stringify(toDo));
-   // re-load the page 
-       history.go(0)
-    });
-  }
-<<<<<<< HEAD
-
-=======
+    deleteTask[i].addEventListener("click",handleDeleteTask);
+    // {
+  //     e.preventDefault();
+  //     let id = e.target.parentNode.id;
+  //     console.log(toDo);
+  //     let index =getIndexOfId(id);
+  //     const discardArry = toDo.splice(index, 1);
+  //     console.log("I am here at delete");
+  //     console.log(toDo);
+  //     localStorage.setItem("toDo", JSON.stringify(toDo));
+  //  // re-load the page 
+  //      history.go(0)
+    // });
   
-// Jquery function 
->>>>>>> f9d0b9a1d7b22e9417003c2e5401bc282667cb7c
+  } 
   $(function () {
     $("#date").datepicker();
     $(".task-card").draggable();
