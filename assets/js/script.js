@@ -5,6 +5,7 @@ const storeTaskBtn = $("#btn2");
 const btnCloseTask = $(".btn-close");
 const parent = $(".card-body");
 const closebtn =$("#closebtn")
+const deleteTask = document.querySelectorAll(".btnTask");
 
 // array initial
 let toDo = [];
@@ -145,7 +146,8 @@ function handleAddTask(event) {
     $("#title").val("");
     $("#date").val("");
     $("#task").val("");
- 
+  // re-load the page 
+  history.go(0)
   // render the task
   renderTaskList();
 }
@@ -207,11 +209,13 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
+<<<<<<< HEAD
  
-  // delete function
-  const deleteTask = document.querySelectorAll(".btnTask");
-  // console.log(deleteTask);
+=======
 
+>>>>>>> f9d0b9a1d7b22e9417003c2e5401bc282667cb7c
+  // delete function
+ 
   for(let i=0; i< deleteTask.length; i++){
     
     deleteTask[i].addEventListener('click',function(e){
@@ -227,7 +231,12 @@ $(document).ready(function () {
        history.go(0)
     });
   }
+<<<<<<< HEAD
 
+=======
+  
+// Jquery function 
+>>>>>>> f9d0b9a1d7b22e9417003c2e5401bc282667cb7c
   $(function () {
     $("#date").datepicker();
     $(".task-card").draggable();
