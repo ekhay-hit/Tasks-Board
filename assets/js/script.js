@@ -10,10 +10,6 @@ const closebtn =$("#closebtn")
 let toDo = [];
 // Pulling the JSON and parsing it, assigned to an array
 let myTask = JSON.parse(localStorage.getItem("toDo"));
-// console.log(` this is my array now ${JSON.stringify(myTask)}`);
-
-// let taskList = JSON.parse(localStorage.getItem("tasks"));
-// let nextId = JSON.parse(localStorage.getItem("nextId"));
 
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
@@ -40,20 +36,9 @@ function generateTaskId() {
   }
 }
 
-// *********************************************Function to return days left for the task to become due or past due using dayjs()*********************
-function calculateTaskDate(taskDate) {
-  // todays date 
-  let today = dayjs();
-  console.log(`today is ${today}`);
-  const targetDay = dayjs(taskDate);
-  let days = targetDay.diff(today, "day");
-  console.log(`the number of days are ${days}`);
-  return days;
-}
-
 // ************Todo: create a function to create a task card
 
-function createTaskCard(task) {
+function createTaskCard() {
   // check if the array of object is null or has object if does initials the array with the object 
   if (localStorage.getItem("toDo") === null) {
     return;
@@ -66,11 +51,9 @@ function createTaskCard(task) {
   $("#todo-cards").empty();
   $("#in-progress-card").empty();
   $("#done-cards").empty();
-  // task.preventDefault();
   // loop through the array of object and create html dynamically and assign it the values in each object property
   for (let i = 0; i < myTask.length; i++) {
-    // calculate the object days left or passed for due date 
-    let dueDate = calculateTaskDate(myTask[i].date);
+ 
     // create a div
     const divE1 = $("<div>");
     // add and a random id to div
@@ -104,13 +87,16 @@ function createTaskCard(task) {
     // append the button to div
     divE1.append(btn);
       // give a style to div base on the date 
-    if (dueDate > 0) {
-      title.css("background-color", "#EFEFE7"); // gray
-    } else if (dueDate < 0) {
-      divE1.css("background-color", "#FF3333"); // red
-    } else {
+    let taskDate =myTask[i].date;
+    let today = dayjs();
+    if(today.isSame(taskDate, 'day')){
       divE1.css("background-color", "#FFF633"); // yellow
+    }else if (today.isAfter(taskDate)){
+      divE1.css("background-color", "#FF3333"); // red
+    }else {
+      title.css("background-color", "#EFEFE7"); // gray
     }
+   
     // append the div task to the page pased on its status and changed the style
     if (toDo[i].status === "to-do") {
       $("#todo-cards").append(divE1);
@@ -221,10 +207,7 @@ $(document).ready(function () {
 
   storeTaskBtn.click(handleAddTask);
   btnCloseTask.click(closeWindow);
-  closebtn.addEventListener("click", function(){
-    float.hide();
-  })
-
+ 
   // delete function
   const deleteTask = document.querySelectorAll(".btnTask");
   // console.log(deleteTask);
@@ -244,16 +227,9 @@ $(document).ready(function () {
        history.go(0)
     });
   }
-  // deleteTask.addEventListener("click", (e) => {
-  //   console.log(e.target);
-  //   console.log("I am here at delete");
-  //   // $(e.target).parents(".task-card").remove();
-  //   // e.currentTarget.removeChild("<div>");
-  // });
-// Jquery function 
+
   $(function () {
     $("#date").datepicker();
-
     $(".task-card").draggable();
 
     $(".card-body").droppable({

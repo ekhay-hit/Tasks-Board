@@ -15,6 +15,7 @@ body {
   cursor: grab;
 }
 
+/* task windows style */
 .floatDiv{
   display:none;
   line-height: 30px;
@@ -24,8 +25,8 @@ body {
   z-index: 3;
 }
 
+/* task card style */
 .task-card{
- 
   box-shadow: 0px 0px 2px 2px;
   border-radius: 5px;
   height:160px;
@@ -39,14 +40,13 @@ body {
 
   }
   button{
-    /* width: 20%; */
     background-color: red;
     border-radius: 5px;
     box-shadow: 2px 2px;
    
   }
 }
-
+/* close task button style  */
 #closebtn{
   float:right;
   cursor: pointer;
